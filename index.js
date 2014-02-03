@@ -3,39 +3,27 @@
 angular.module('GithubRepoStatus', [])
 
 .factory('SortFn', function() {
-    function sortByLowerCaseNameFn(){
-      return function(repos){
-
-        if( !(_.isArray(repos) ) ){
-          console.log('Not an array');
-          return repos;
-        }
-
-        repos.map(function(repo){
-          if(repo && repo.name && typeof repo.name === 'string'){
-            repo.__lower_case_name = repo.name.toLowerCase();
-          }
-        });
-
-        var sorted =  _.sortBy(repos, '__lower_case_name');
-        return sorted;
-
-      };
+    function validator(repos, sortFn){
+      if( !(_.isArray(repos) ) ){
+        console.log('Not an array');
+        return repos;
+      }
+      return sortFn(repos);
     }
 
-    function sortByRepoProp(prop, reverse){
-      return function(repos){
-        if( !(_.isArray(repos) ) ){
-          console.log('Not an array');
-          return repos;
-        }
-
-        var sorted =  _.sortBy(repos, prop);
-        if (reverse){
-          sorted.reverse();
-        }
-        return sorted;
+    function sortByLowerCaseNameFn(){
+      var sortFn = function(repos){
+        return  _.sortBy(repos, '__lower_case_name');
       };
+
+      return validator(repos, sortFn);
+    }
+
+    function sortByRepoProp(prop){
+      var sortFn = function(repos){
+        return  _.sortBy(repos, prop);
+      };
+      return validator(repos, sortFn);
     }
 
     return {

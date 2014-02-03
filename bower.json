@@ -1,0 +1,28 @@
+{
+  "name": "github-repo-fetcher",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/forforf/github-repo-fetcher",
+  "authors": [
+    "David Martin <dmarti21@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/forforf/github-repo-fetcher.git"
+  },
+  "description": "Fetches repo data, with flexible sorting and filtering",
+  "dependencies":{
+    "underscore": "1.5.2"
+  },
+  "devDependencies": {
+    "angular-mocks":"latest"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
