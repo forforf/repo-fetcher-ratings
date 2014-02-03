@@ -86,30 +86,29 @@ describe('GithubRepoStatus', function(){
       var fetcher;
       var user;
       var ghUrl;
-      var repo1;
-      var repo2;
-      var repo3;
       var repos;
-      var fetchedRepos;
       var _httpBackend;
 
       beforeEach(inject(function($httpBackend){
         user = 'forforforf';
         ghUrl = 'https://api.github.com/users/'+user+'/repos'
-        repo1 = {name: 'a'};
-        repo2 = {name: 'b'};
-        repo3 = {name: 'c'};
+        var repo1 = {name: 'a'};
+        var repo2 = {name: 'b'};
+        var repo3 = {name: 'c'};
         repos = [repo1, repo2, repo3];
         _httpBackend = $httpBackend;
+
         _httpBackend
           .when('GET', ghUrl)
           .respond(repos);
+
+        fetcher = githubRepo.fetcher;
       }));
 
       it('fetches from the repo', function(){
-        var filRepos = githubRepo.fetcher(user);
-        console.debug('filRepos', filRepos);
-        githubRepo.fetcher(user).then(function(resp){
+        var fetchedRepos;
+
+        fetcher(user).then(function(resp){
           fetchedRepos = resp;
         });
 
@@ -117,6 +116,28 @@ describe('GithubRepoStatus', function(){
         _httpBackend.flush();
         expect(fetchedRepos).toEqual(repos);
       });
+
+      //I'm not able to figure out an elegant test for this
+      xit('passes object params in request to url')
+
+      it('applies filters sequentially', function(){
+        var fetchedRepos;
+
+        var chain1 = function(repos){ repos.push({name: 'd'}); return repos; };
+        var chain2 = function(repos){ return repos.reverse(); };
+        var chain3 = function(repos){ return repos.slice(1,3); };
+        var chains = [chain1, chain2, chain3];
+
+        var expectedRepos = [ { name : 'c' }, { name : 'b' } ];
+
+        fetcher(user, chains).then(function(resp){
+          fetchedRepos = resp;
+        });
+
+        expect(fetchedRepos).toBeUndefined();
+        _httpBackend.flush();
+        expect(fetchedRepos).toEqual(expectedRepos);
+      })
 
     });
   });
