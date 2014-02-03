@@ -10,7 +10,7 @@
   "dependencies": {},
   "devDependencies": {
     "karma": "~0.10",
-    "karma-jasmine": "~0.1",
+    "karma-jasmine": "~0.1"
   },
   "scripts": {
     "test": "./node_modules/.bin/karma start ./test/karma.config.js --single-run --browsers PhantomJS"
