@@ -2,67 +2,75 @@
 
 angular.module('GithubRepoStatus', [])
 
-.factory('SortFn', function() {
-    function validator(repos, sortFn){
-      if( !(_.isArray(repos) ) ){
-        console.log('Not an array');
-        return repos;
+  .factory('qChain', function () {
+
+    function chainErrorHandler(err) {
+      err.message = 'Error caught during filtering collection. Orig Msg: ' + err.message;
+      return err;
+    }
+
+    //This function runs the initPromFn (which should be a promise that resolves to a collection)
+    //then runs each filter in sequence against the resulting collection
+    function generator(initPromFn, chain) {
+      if (!(_.isArray(chain))){
+        return initPromFn();
       }
-      return sortFn(repos);
-    }
 
-    function sortByLowerCaseNameFn(){
-      var sortFn = function(repos){
-        return  _.sortBy(repos, '__lower_case_name');
-      };
-
-      return validator(repos, sortFn);
-    }
-
-    function sortByRepoProp(prop){
-      var sortFn = function(repos){
-        return  _.sortBy(repos, prop);
-      };
-      return validator(repos, sortFn);
+      return chain.reduce(function (prevPromise, curProm) {
+        return prevPromise.then(curProm).
+          catch (chainErrorHandler);
+      }, initPromFn());
     }
 
     return {
-      lowerCaseName: sortByLowerCaseNameFn,
-      repoProperty: sortByRepoProp
+      generator: generator
     };
   })
 
-.factory('GithubRepos', function($q) {
+  .factory('GithubRepo', function ($http, qChain) {
 
-  function repoFetcher(username, sortFn){
+    //filters is an array
+    // if an item is an object, it will be merged with any other objects
+    // and the merged object will be sent to the repo as url query parameters
+    // for example [{sort: 'updated'}] would result in ?sort=updated query param
+    // If an item is a function, it is applied after the repos is received and
+    // each function is applied in order (each filter function must accept and
+    // return an array of repo objects. Note the fn in the array must be a
+    // fn that returns the fn to apply.
+    function fetcher(username, filters) {
 
-    var cred = {};
+      if (!(_.isArray(filters))){
+        filters = [];
+      }
 
-    var gh = new Octokit(cred);
 
-    var user = gh.getUser(username);
+      var reqFilterList = filters.filter(function (f) {
+        return typeof f === 'object';
+      });
 
-    if(typeof sortFn === 'function'){
-      return $q.when(user.getRepos())
-        .then( sortFn );
+      var reqFilters = _.extend.apply(null, reqFilterList);
+
+      var respFilters = filters.filter(function (f) {
+        return typeof f === 'function';
+      });
+
+      var urlOpts = {
+        method: 'GET',
+        url: 'https://api.github.com/users/' + username + '/repos',
+        params: reqFilters
+      };
+
+      var fetcherFn = function () {
+        return $http(urlOpts).then(function (resp) {
+          return resp.data;
+        });
+      };
+
+      var filteredRepos = qChain.generator;
+      return filteredRepos(fetcherFn, respFilters);
     }
 
-    return $q.when(user.getRepos())
-  }
-
-  function collectionSliceFn(start,stop){
-    return function(collection){
-      //we want to include stop element in the collection
-      return collection.slice(start, stop+1);
+    return {
+      fetcher: fetcher
     };
-  }
-
-  function repoCollection(start, stop, sortFn){
-    return repoFetcher('forforf', sortFn)
-      .then( collectionSliceFn(start, stop) );
-  }
-
-  return {
-    repoCollection: repoCollection
-  };
-})
+  });
