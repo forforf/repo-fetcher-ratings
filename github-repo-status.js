@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('GithubRepoStatus', [])
+angular.module('GithubRepoFetcher', [])
 
   .factory('qChain', function () {
 

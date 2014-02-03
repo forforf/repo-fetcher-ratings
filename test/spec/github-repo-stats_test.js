@@ -5,8 +5,8 @@ function escapeRegExp(string){
   return string.replace(/([.*+?^=!${}()|\[\]\/\\])/g, "\\$1");
 }
 
-describe('GithubRepoStatus', function(){
-  beforeEach(module('GithubRepoStatus'));
+describe('GithubRepoFetcher', function(){
+  beforeEach(module('GithubRepoFetcher'));
 
   describe('qChain', function(){
     var _qChain;
