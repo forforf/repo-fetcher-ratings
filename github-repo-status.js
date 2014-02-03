@@ -61,6 +61,7 @@ angular.module('GithubRepoStatus', [])
       };
 
       var fetcherFn = function () {
+        console.debug('fetcher function called', urlOpts);
         return $http(urlOpts).then(function (resp) {
           return resp.data;
         });

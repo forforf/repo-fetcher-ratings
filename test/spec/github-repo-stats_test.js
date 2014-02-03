@@ -1,5 +1,10 @@
 'use strict';
 
+//helpers
+function escapeRegExp(string){
+  return string.replace(/([.*+?^=!${}()|\[\]\/\\])/g, "\\$1");
+}
+
 describe('GithubRepoStatus', function(){
   beforeEach(module('GithubRepoStatus'));
 
@@ -39,7 +44,7 @@ describe('GithubRepoStatus', function(){
           return deferred.promise;
         }
 
-        delay=99;
+        delay=100;
         initPromFn = function(){ return getProm( ['init'], delay) };
         chain = [];
         chain.push( function(coll){ return filter(coll, 'a'); });
@@ -75,7 +80,44 @@ describe('GithubRepoStatus', function(){
 
     it('sanity check', function(){
       expect(githubRepo).toBeDefined();
-    })
-  });
+    });
 
+    describe('fetcher', function(){
+      var fetcher;
+      var user;
+      var ghUrl;
+      var repo1;
+      var repo2;
+      var repo3;
+      var repos;
+      var fetchedRepos;
+      var _httpBackend;
+
+      beforeEach(inject(function($httpBackend){
+        user = 'forforforf';
+        ghUrl = 'https://api.github.com/users/'+user+'/repos'
+        repo1 = {name: 'a'};
+        repo2 = {name: 'b'};
+        repo3 = {name: 'c'};
+        repos = [repo1, repo2, repo3];
+        _httpBackend = $httpBackend;
+        _httpBackend
+          .when('GET', ghUrl)
+          .respond(repos);
+      }));
+
+      it('fetches from the repo', function(){
+        var filRepos = githubRepo.fetcher(user);
+        console.debug('filRepos', filRepos);
+        githubRepo.fetcher(user).then(function(resp){
+          fetchedRepos = resp;
+        });
+
+         expect(fetchedRepos).toBeUndefined();
+        _httpBackend.flush();
+        expect(fetchedRepos).toEqual(repos);
+      });
+
+    });
+  });
 });
