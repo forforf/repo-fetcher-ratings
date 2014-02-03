@@ -6,4 +6,4 @@ before_install:
   - npm install -g grunt-cli
   - npm install
 
-script: grunt jasmine
+script: npm test
