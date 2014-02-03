@@ -1,5 +1,5 @@
 {
-  "name":"github-repo-fetcher",
+  "name": "github-repo-fetcher",
   "version": "0.0.1",
   "author": "Dave Martin <dpmartin@yahoo.com>",
   "description": "lazy and flexible filtering and sorting of repo information",
@@ -10,7 +10,9 @@
   "dependencies": {},
   "devDependencies": {
     "karma": "~0.10",
-    "karma-jasmine": "~0.1"
+    "karma-jasmine": "~0.1",
+    "grunt": "~0.4.2",
+    "grunt-karma": "~0.6.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/karma start ./test/karma.config.js --single-run --browsers PhantomJS"
