@@ -13,6 +13,6 @@
     "karma-jasmine": "~0.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "./node_modules/.bin/karma start ./test/karma.config.js --single-run --browsers PhantomJS"
   }
 }
