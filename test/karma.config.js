@@ -17,7 +17,8 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/underscore/underscore.js',
-      'github-repo-status.js',
+      'bower_components/github-repo-fetcher/github-repo-fetcher.js',
+      'repo-fetcher-ratings.js',
       'test/spec/**/*test.js'
     ],
 

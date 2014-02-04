@@ -1,11 +1,11 @@
 {
-  "name": "github-repo-fetcher",
+  "name": "repo-fetcher-ratings",
   "version": "0.0.1",
   "author": "Dave Martin <dpmartin@yahoo.com>",
-  "description": "lazy and flexible filtering and sorting of repo information",
+  "description": "Injects rating data into repo object if it exists in the description",
   "repository": {
     "type": "git",
-    "url": "https://github.com/forforf/github-repo-fetcher.git"
+    "url": "https://github.com/forforf/repo-fetcher-ratings.git"
   },
   "dependencies": {},
   "devDependencies": {

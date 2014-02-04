@@ -1,18 +1,20 @@
 {
-  "name": "github-repo-fetcher",
-  "main": "index.js",
+  "name": "repo-fetcher-ratings",
+  "main": "repo-fetcher-ratings.js",
   "version": "0.0.1",
-  "homepage": "https://github.com/forforf/github-repo-fetcher",
+  "homepage": "https://github.com/forforf/repo-fetcher-ratings",
   "authors": [
     "David Martin <dmarti21@gmail.com>"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/forforf/github-repo-fetcher.git"
+    "url": "git://github.com/forforf/repo-fetcher-ratings.git"
   },
-  "description": "Fetches repo data, with flexible sorting and filtering",
+  "description": "Injects ratings into repo objects, if rating informatino is in description",
   "dependencies":{
-    "underscore": "1.5.2"
+    "angular": "latest",
+    "underscore": "1.5.2",
+    "github-repo-fetcher": "git://github.com/forforf/github-repo-fetcher.git"
   },
   "devDependencies": {
     "angular-mocks":"latest"
