@@ -40,16 +40,18 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
       return reposWithRatings;
     }
 
-    function storeUserRepos(user){
+    function storeUserRepos(user, filters){
+      baseModel[user] = {};
       return function(repos){
-        baseModel[user] = repos;
+        baseModel[user.repos] = repos;
+        baseModel[user.fetch_filters] = filters;
         return repos;
       }
     }
 
     //baseModel iterates over the raw repo data objects
     //and inserts the rating data
-    function refreshBaseModel(user, filters){
+    function initBaseModel(user, filters){
       if (!(_.isArray(filters))){
         filters = [];
       }
@@ -61,14 +63,19 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
 
       //fetch from github
       return GithubRepo.fetcher(user, filters)
-        .then(storeUserRepos(user))
+        .then(storeUserRepos(user, filters))
+
+    }
+
+    function getBaseModel(user, filters){
+      var qChain = GithubRepo.generator(x, filters)// need to implement qChain for local collection
 
     }
 
 
     return {
-      refreshBaseModel: refreshBaseModel,
-      getBaseModel: null,
+      initBaseModel: initBaseModel,
+      getBaseModel: getBaseModel,
       viewModel: function(){}
     };
   })
