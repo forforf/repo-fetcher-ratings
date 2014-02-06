@@ -30,10 +30,15 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
         return $q.reject(new Error('Cannot initBaseModel with multiple users: ' + strArgs.join(', ')));
       }
 
-      var arrArgs = args.filter( function(i){ return _.isArray(i); });
-      if(arrArgs.length>1){
-        var arrArgConcat = arrArgs.concat.call(arrArgs);
+      var arrArgNested = args.filter( function(i){ return _.isArray(i); });
+      if(arrArgNested.length ===0){
+        arrArgNested = [[]];
       }
+
+      var arrArgs = arrArgNested.reduce(function(combined, cur){
+        combined.concat(cur);
+        return combined;
+      });
 
 
       var optArgs = args.filter( function(i){ return objButNotAryOrFn(i) });
@@ -42,7 +47,7 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
       }
 
       modelArgs.user = strArgs[0];
-      modelArgs.filters = arrArgConcat;
+      modelArgs.filters = arrArgs;
       modelArgs.opts = optArgs[0];
 
       return modelArgs;
@@ -57,7 +62,7 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
         if(repo.description){
           desc = repo.description;
         } else {
-          repo.__rating = new ApiMismatchError('API missing description field')
+          repo.__rating = new ApiMismatchError('API missing description field');
           return repo;
         }
 
