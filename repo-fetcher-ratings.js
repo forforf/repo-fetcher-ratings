@@ -96,7 +96,7 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
       // argument handler
       var args = modelArgHandler( arguments );
       var user = args.user;
-      var filters = args.filter;
+      var filters = args.filters;
 
 
       if (!(_.isArray(filters))){
@@ -115,7 +115,7 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
     function getBaseModel(user, filters){
       var args = modelArgHandler( arguments );
       var user = args.user;
-      var filters = args.filter;
+      var filters = args.filters;
       var opts = args.opts || {};
       var doInit = opts.init;
 
