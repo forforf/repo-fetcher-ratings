@@ -280,4 +280,22 @@ describe('RepoFetcherRatings', function(){
     });
   });
 
-});
+  describe('list', function(){
+
+
+    beforeEach(inject(function( $injector, $httpBackend, Repo){
+      var repos = [
+        { description: 'Awesome  _rating_:{"stable":9, "useful":8}' },
+        { description: 'Meh  _rating_:{"stable":5, "useful":4}' },
+        { description: 'Unfinished  _rating_:{"stable":1, "useful":6}' }
+      ];
+
+      $httpBackend
+        .when('GET', /api.github.com/)
+        .respond(repos);
+
+    }));
+
+  });
+
+})

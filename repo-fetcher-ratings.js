@@ -139,11 +139,10 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
 
     return {
       initBaseModel: initBaseModel,
-      getBaseModel: getBaseModel,
-      viewModel: function(){}
+      getBaseModel: getBaseModel
     };
   })
 
-  .directive('repoRating', function () {
+  .directive('repoRatings', function () {
     return {};
   });
