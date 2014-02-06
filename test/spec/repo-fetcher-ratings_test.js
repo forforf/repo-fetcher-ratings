@@ -53,6 +53,9 @@ describe('RepoFetcherRatings', function(){
           repo.initBaseModel('foo', [])
             .then(function(repos){
               fetchedRepos = repos;
+            })
+            .catch(function(err){
+              throw(err);
             });
         });
 
@@ -191,48 +194,87 @@ describe('RepoFetcherRatings', function(){
       });
     });
 
-    xdescribe('.getBaseModel', function(){
+    describe('.getBaseModel', function(){
       describe('nominal cases', function(){
-        var fetchedRepos;
-        var count;
+        describe('initialize model', function(){
+          var fetchedRepos;
+          var count;
 
-        var repos = [
-          { description: 'Awesome  _rating_:{"stable":9, "useful":8}' },
-          { description: 'Meh  _rating_:{"stable":5, "useful":4}' },
-          { description: 'Unfinished  _rating_:{"stable":1, "useful":6}' }
-        ];
+          var repos = [
+            { description: 'Awesome  _rating_:{"stable":9, "useful":8}' },
+            { description: 'Meh  _rating_:{"stable":5, "useful":4}' },
+            { description: 'Unfinished  _rating_:{"stable":1, "useful":6}' }
+          ];
 
-        beforeEach(function(){
-          count=0;
+          beforeEach(function(){
+            count=0;
 
-          function fetchResponse(method, url, data, headers){
-            count+=1;
-            return [ 200, repos, {} ];
-          }
+            function fetchResponse(method, url, data, headers){
+              count+=1;
+              return [ 200, repos, {} ];
+            }
+               88
+            _httpBackend
+              .when('GET', /api.github.com/)
+              .respond(repos);
 
-          _httpBackend
-            .when('GET', /api.github.com/)
-            .respond(repos);
+            repo.getBaseModel('forforforf', [], {init: true})
+              .then(function(repos){
+                fetchedRepos = repos;
+              });
+          });
 
-          repo.getBaseModel('forforforf', [])
-            .then(function(repos){
-              fetchedRepos = repos;
-            });
+          it('returns collection', function(){
+            expect(fetchedRepos).not.toBeDefined();
+            _httpBackend.flush();
+            expect(fetchedRepos.length).toEqual(3);
+          });
         });
 
-        it('returns collection', function(){
-          fetchedRepos = null;
-          _httpBackend.flush();
-          expect(fetchedRepos.length).toEqual(3);
-        });
 
-        it('each item has rating object', function(){
-//          fetchedRepos = null;
-//          _httpBackend.flush();
-//          fetchedRepos.forEach(function(repo){
-//            expect(repo.__rating.stable).toEqual(5);
-//            expect(repo.__rating.useful).toEqual(4) ;
-//          });
+        describe('initialize model', function(){
+          var fetchedRepos;
+          var count;
+
+          var repos = [
+            { description: 'Awesome  _rating_:{"stable":9, "useful":8}' },
+            { description: 'Meh  _rating_:{"stable":5, "useful":4}' },
+            { description: 'Unfinished  _rating_:{"stable":1, "useful":6}' }
+          ];
+
+          beforeEach(function(){
+            count=0;
+
+            function fetchResponse(method, url, data, headers){
+              count+=1;
+              return [ 200, repos, {} ];
+            }
+
+            _httpBackend
+              .when('GET', /api.github.com/)
+              .respond(repos);
+
+            //initialize cache
+            repo.getBaseModel('forforforf', [], {init: true})
+              .then(function(repos){
+                fetchedRepos = repos;
+              });
+          });
+
+          it('returns collection', function(){
+            expect(fetchedRepos).not.toBeDefined();
+            _httpBackend.flush();
+
+            // getting mode from cache
+            repo.getBaseModel('forforforf', [])
+              .then(function(repos){
+                expect(fetchedRepos).toEqual(repos);
+              });
+
+            //If No http request was made, flush will error
+            expect(function(){ _httpBackend.flush(); }).toThrow('No pending request to flush !');
+
+          });
         });
       });
     });
