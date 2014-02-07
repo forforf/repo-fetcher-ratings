@@ -28,8 +28,6 @@ describe('RepoFetcherRatings', function(){
 
     it('sanity check', function(){
       expect(repo).toBeDefined();
-      expect(repo.initBaseModel).toBeDefined();
-      expect(repo.viewModel).toBeDefined();
     });
 
     describe('.initBaseModel', function(){
