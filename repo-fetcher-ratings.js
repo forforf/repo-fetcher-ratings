@@ -175,9 +175,6 @@ angular.module('RepoFetcherRatings', ['GithubRepoFetcher'])
         return "translate("+x+"," +y+ ")";
       }
 
-      element.append('<div>'+scope.repo.owner.login+'</div>');
-
-
       var ratingData = scope.repo.__rating;
       if(!ratingData){
         return element.append(config.noDataTemplate);
