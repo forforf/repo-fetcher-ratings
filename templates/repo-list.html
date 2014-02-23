@@ -1,7 +1,7 @@
 
 
-  <ul class="repo-ratings"><a class="repo-ratings" href="{{repo.html_url}}">{{ repo.name }}</a>
-    <li class="repo-ratings" ng-repeat="(k,v) in repo.__rating">
+  <ul class="repo-ratings"><a class="repo-ratings" href="{{rurl}}">{{ name }}</a>
+    <li class="repo-ratings" ng-repeat="(k,v) in ratings">
       {{k}}: {{v}}
     </li>
   </ul>
